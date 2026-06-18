@@ -1,10 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-'use client'
-
 import { LiveImageShape, LiveImageShapeUtil } from '@/components/LiveImageShapeUtil'
-import { LiveImageTool,MakeLiveButton } from '@/components/LiveImageTool'
+import { LiveImageTool, MakeLiveButton } from '@/components/LiveImageTool'
 import { LockupLink } from '@/components/LockupLink'
-import { LiveImageProvider } from '@/hooks/useLiveImage'
+import { LiveImageProvider, useLiveImageContext } from '@/hooks/useLiveImage'
 import * as fal from '@fal-ai/serverless-client'
 import {
 	AssetRecordType,
@@ -56,7 +53,70 @@ const overrides: TLUiOverrides = {
 const shapeUtils = [LiveImageShapeUtil]
 const tools = [LiveImageTool]
 
-export default function Home() {
+const SettingsPanel = track(function SettingsPanel() {
+	const editor = useEditor()
+	const { backend, setBackend, status, error } = useLiveImageContext()
+	const isDarkMode = editor.user.getIsDarkMode()
+
+	return (
+		<div className={`live-image-settings ${isDarkMode ? 'dark' : ''}`}>
+			<div className="live-image-settings__title">
+				<span>AI Backend Settings</span>
+			</div>
+			
+			<div className="live-image-settings__subtitle">Active Engine</div>
+			<div className="backend-options">
+				<div
+					className={`backend-option ${backend === 'fal' ? 'active' : ''}`}
+					onClick={() => setBackend('fal')}
+				>
+					<div className="backend-option__info">
+						<span className="backend-option__name">Fal.ai</span>
+						<span className="backend-option__desc">Real-time WebSocket (Paid)</span>
+					</div>
+					<div className="backend-option__radio" />
+				</div>
+
+				<div
+					className={`backend-option ${backend === 'pollinations' ? 'active' : ''}`}
+					onClick={() => setBackend('pollinations')}
+				>
+					<div className="backend-option__info">
+						<span className="backend-option__name">Pollinations.ai</span>
+						<span className="backend-option__desc">HTTP Generator (Free)</span>
+					</div>
+					<div className="backend-option__radio" />
+				</div>
+
+				<div
+					className={`backend-option ${backend === 'puter' ? 'active' : ''}`}
+					onClick={() => setBackend('puter')}
+				>
+					<div className="backend-option__info">
+						<span className="backend-option__name">Puter.js</span>
+						<span className="backend-option__desc">Client SDK (Free)</span>
+					</div>
+					<div className="backend-option__radio" />
+				</div>
+			</div>
+
+			<div className="backend-status">
+				<span className={`status-dot ${status}`} />
+				<span style={{ textTransform: 'capitalize' }}>
+					Status: {status === 'generating' ? 'generating...' : status}
+				</span>
+			</div>
+
+			{error && (
+				<div className="backend-error-message">
+					{error}
+				</div>
+			)}
+		</div>
+	)
+})
+
+export default function App() {
 	const onEditorMount = (editor: Editor) => {
 		// We need the editor to think that the live image shape is a frame
 		// @ts-expect-error: patch
@@ -100,6 +160,7 @@ export default function Home() {
 						<SneakySideEffects />
 						<LockupLink />
 						<LiveImageAssets />
+						<SettingsPanel />
 					</Tldraw>
 				</div>
 			</main>
