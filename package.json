@@ -12,10 +12,10 @@
 	},
 	"dependencies": {
 		"@fal-ai/serverless-client": "^0.6.0",
-		"@tldraw/tldraw": "canary",
+		"@tldraw/tldraw": "2.0.0-canary.1f425dcab314",
 		"react": "^18",
 		"react-dom": "^18",
-		"uuid": "^9.0.1"
+		"uuid": "^11.1.1"
 	},
 	"devDependencies": {
 		"@types/node": "^20",
@@ -28,6 +28,11 @@
 		"prettier": "^3.1.0",
 		"prettier-plugin-organize-imports": "^3.2.4",
 		"typescript": "^5.3.3",
-		"vite": "^5.0.10"
+		"vite": "^6.4.3"
+	},
+	"overrides": {
+		"esbuild": "^0.25.0",
+		"uuid": "^11.1.1",
+		"nanoid": "^5.0.9"
 	}
 }
