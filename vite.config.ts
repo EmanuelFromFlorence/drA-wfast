@@ -170,7 +170,7 @@ export default defineConfig(({ mode }) => {
                   return;
                 }
 
-                let targetUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=512&height=512&nologo=true`;
+                let targetUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=512&height=512&nologo=true&model=p-image-edit`;
                 if (seed !== undefined) {
                   targetUrl += `&seed=${seed}`;
                 }

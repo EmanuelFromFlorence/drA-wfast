@@ -211,6 +211,8 @@ export function LiveImageProvider({
 					const imageElement = await puter.ai.txt2img(req.prompt, {
 						model: 'stabilityai/stable-diffusion-xl-base-1.0',
 						input_image: req.image_url,
+						prompt_strength: 0.35,
+						strength: 0.35,
 					});
 					if (imageElement && imageElement.src) {
 						setStatus('idle')
