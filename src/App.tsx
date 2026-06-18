@@ -57,59 +57,91 @@ const SettingsPanel = track(function SettingsPanel() {
 	const editor = useEditor()
 	const { backend, setBackend, status, error } = useLiveImageContext()
 	const isDarkMode = editor.user.getIsDarkMode()
+	const [isOpen, setIsOpen] = useState(false)
 
 	return (
-		<div className={`live-image-settings ${isDarkMode ? 'dark' : ''}`}>
-			<div className="live-image-settings__title">
-				<span>AI Backend Settings</span>
-			</div>
-			
-			<div className="live-image-settings__subtitle">Active Engine</div>
-			<div className="backend-options">
-				<div
-					className={`backend-option ${backend === 'fal' ? 'active' : ''}`}
-					onClick={() => setBackend('fal')}
-				>
-					<div className="backend-option__info">
-						<span className="backend-option__name">Fal.ai</span>
-						<span className="backend-option__desc">Real-time WebSocket (Paid)</span>
+		<div className={`live-image-settings-container ${isDarkMode ? 'dark' : ''} ${isOpen ? 'open' : ''}`}>
+			{/* Floating Toggle Button */}
+			<button
+				className="live-image-settings-toggle"
+				onClick={() => setIsOpen(!isOpen)}
+				title="AI Backend Settings"
+				aria-label="Toggle AI Backend Settings"
+			>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+					<line x1="4" y1="21" x2="4" y2="14"></line>
+					<line x1="4" y1="10" x2="4" y2="3"></line>
+					<line x1="12" y1="21" x2="12" y2="12"></line>
+					<line x1="12" y1="8" x2="12" y2="3"></line>
+					<line x1="20" y1="21" x2="20" y2="16"></line>
+					<line x1="20" y1="12" x2="20" y2="3"></line>
+					<line x1="1" y1="14" x2="7" y2="14"></line>
+					<line x1="9" y1="8" x2="15" y2="8"></line>
+					<line x1="17" y1="16" x2="23" y2="16"></line>
+				</svg>
+			</button>
+
+			{/* Settings Card */}
+			{isOpen && (
+				<div className="live-image-settings-card">
+					<div className="live-image-settings__title">
+						<span>AI Backend Settings</span>
+						<button className="live-image-settings__close" onClick={() => setIsOpen(false)}>
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+						</button>
 					</div>
-					<div className="backend-option__radio" />
-				</div>
+					
+					<div className="live-image-settings__subtitle">Active Engine</div>
+					<div className="backend-options">
+						<div
+							className={`backend-option ${backend === 'fal' ? 'active' : ''}`}
+							onClick={() => setBackend('fal')}
+						>
+							<div className="backend-option__info">
+								<span className="backend-option__name">Fal.ai</span>
+								<span className="backend-option__desc">Real-time WebSocket (Paid)</span>
+							</div>
+							<div className="backend-option__radio" />
+						</div>
 
-				<div
-					className={`backend-option ${backend === 'pollinations' ? 'active' : ''}`}
-					onClick={() => setBackend('pollinations')}
-				>
-					<div className="backend-option__info">
-						<span className="backend-option__name">Pollinations.ai</span>
-						<span className="backend-option__desc">HTTP Generator (Free)</span>
+						<div
+							className={`backend-option ${backend === 'pollinations' ? 'active' : ''}`}
+							onClick={() => setBackend('pollinations')}
+						>
+							<div className="backend-option__info">
+								<span className="backend-option__name">Pollinations.ai</span>
+								<span className="backend-option__desc">HTTP Generator (Free)</span>
+							</div>
+							<div className="backend-option__radio" />
+						</div>
+
+						<div
+							className={`backend-option ${backend === 'puter' ? 'active' : ''}`}
+							onClick={() => setBackend('puter')}
+						>
+							<div className="backend-option__info">
+								<span className="backend-option__name">Puter.js</span>
+								<span className="backend-option__desc">Client SDK (Free)</span>
+							</div>
+							<div className="backend-option__radio" />
+						</div>
 					</div>
-					<div className="backend-option__radio" />
-				</div>
 
-				<div
-					className={`backend-option ${backend === 'puter' ? 'active' : ''}`}
-					onClick={() => setBackend('puter')}
-				>
-					<div className="backend-option__info">
-						<span className="backend-option__name">Puter.js</span>
-						<span className="backend-option__desc">Client SDK (Free)</span>
+					<div className="backend-status">
+						<span className={`status-dot ${status}`} />
+						<span style={{ textTransform: 'capitalize' }}>
+							Status: {status === 'generating' ? 'generating...' : status}
+						</span>
 					</div>
-					<div className="backend-option__radio" />
-				</div>
-			</div>
 
-			<div className="backend-status">
-				<span className={`status-dot ${status}`} />
-				<span style={{ textTransform: 'capitalize' }}>
-					Status: {status === 'generating' ? 'generating...' : status}
-				</span>
-			</div>
-
-			{error && (
-				<div className="backend-error-message">
-					{error}
+					{error && (
+						<div className="backend-error-message">
+							{error}
+						</div>
+					)}
 				</div>
 			)}
 		</div>

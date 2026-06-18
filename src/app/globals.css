@@ -170,29 +170,109 @@ a {
 }
 
 /* Custom Floating Settings Panel Styles */
-.live-image-settings {
+.live-image-settings-container {
 	position: absolute;
-	top: 15px;
-	left: 15px;
+	inset: 0;
 	z-index: 100000;
-	background: rgba(255, 255, 255, 0.75);
+	pointer-events: none; /* Let clicks pass to canvas when closed */
+}
+
+/* Style the floating toggle button */
+.live-image-settings-toggle {
+	position: absolute;
+	bottom: 15px;
+	left: calc(50% - 240px);
+	transform: translateX(-100%);
+	z-index: 100000;
+	pointer-events: all;
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.85);
 	backdrop-filter: blur(12px) saturate(180%);
 	-webkit-backdrop-filter: blur(12px) saturate(180%);
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: #1a1a1a;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	padding: 0;
+}
+
+.live-image-settings-container.dark .live-image-settings-toggle {
+	background: rgba(30, 30, 30, 0.85);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	color: #f0f0f0;
+}
+
+.live-image-settings-toggle:hover {
+	background: rgba(255, 255, 255, 0.95);
+	border-color: rgba(0, 0, 0, 0.2);
+	transform: translateX(-100%) scale(1.05);
+}
+
+.live-image-settings-container.dark .live-image-settings-toggle:hover {
+	background: rgba(255, 255, 255, 0.15);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.live-image-settings-toggle:active {
+	transform: translateX(-100%) scale(0.95);
+}
+
+/* Active status when panel is open */
+.live-image-settings-container.open .live-image-settings-toggle {
+	background: rgba(47, 128, 237, 0.15);
+	border-color: #2f80ed;
+	color: #2f80ed;
+}
+
+.live-image-settings-container.dark.open .live-image-settings-toggle {
+	background: rgba(47, 128, 237, 0.25);
+	border-color: #2f80ed;
+	color: #2f80ed;
+}
+
+/* The settings card */
+.live-image-settings-card {
+	position: absolute;
+	bottom: 65px;
+	left: calc(50% - 240px);
+	transform: translateX(-100%);
+	z-index: 99999;
+	background: rgba(255, 255, 255, 0.85);
+	backdrop-filter: blur(16px) saturate(180%);
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
 	border: 1px solid rgba(255, 255, 255, 0.45);
 	border-radius: 16px;
 	padding: 16px;
 	width: 280px;
-	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+	box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.15);
 	font-family: 'Inter', system-ui, -apple-system, sans-serif;
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	pointer-events: all;
+	animation: slideUpFade 0.2s ease-out;
 }
 
-/* Dark mode compatibility */
-.live-image-settings.dark {
-	background: rgba(30, 30, 30, 0.75);
+.live-image-settings-container.dark .live-image-settings-card {
+	background: rgba(30, 30, 30, 0.85);
 	border: 1px solid rgba(255, 255, 255, 0.08);
-	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+	box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideUpFade {
+	from {
+		opacity: 0;
+		transform: translateX(-100%) translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(-100%) translateY(0);
+	}
 }
 
 .live-image-settings__title {
@@ -205,8 +285,31 @@ a {
 	justify-content: space-between;
 	color: #1a1a1a;
 }
-.live-image-settings.dark .live-image-settings__title {
+.live-image-settings-container.dark .live-image-settings__title {
 	color: #f0f0f0;
+}
+
+/* Close button style */
+.live-image-settings__close {
+	all: unset;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: #7f8c8d;
+	transition: color 0.15s ease;
+	padding: 4px;
+	border-radius: 50%;
+}
+
+.live-image-settings__close:hover {
+	color: #2c3e50;
+	background: rgba(0, 0, 0, 0.05);
+}
+
+.live-image-settings-container.dark .live-image-settings__close:hover {
+	color: #ffffff;
+	background: rgba(255, 255, 255, 0.08);
 }
 
 .live-image-settings__subtitle {
@@ -217,8 +320,43 @@ a {
 	color: #7f8c8d;
 	margin-bottom: 8px;
 }
-.live-image-settings.dark .live-image-settings__subtitle {
+.live-image-settings-container.dark .live-image-settings__subtitle {
 	color: #90a4ae;
+}
+
+/* Tablet & Mobile Responsive Positioning */
+@media (max-width: 768px) {
+	.live-image-settings-toggle {
+		bottom: 75px;
+		left: auto;
+		right: 15px;
+		transform: none;
+	}
+	.live-image-settings-toggle:hover {
+		transform: scale(1.05);
+	}
+	.live-image-settings-toggle:active {
+		transform: scale(0.95);
+	}
+	
+	.live-image-settings-card {
+		bottom: 125px;
+		left: auto;
+		right: 15px;
+		transform: none;
+		animation: slideUpFadeMobile 0.2s ease-out;
+	}
+	
+	@keyframes slideUpFadeMobile {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 }
 
 /* Toggle Option list */
