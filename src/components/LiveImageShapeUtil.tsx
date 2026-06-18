@@ -214,6 +214,35 @@ export class LiveImageShapeUtil extends ShapeUtil<LiveImageShape> {
 						})
 					}}
 				/>
+				{asset && asset.props.src && (
+					<Button
+						type="icon"
+						icon="external-link"
+						style={{
+							position: 'absolute',
+							top: -4,
+							left: (shape.props.overlayResult ? shape.props.w : shape.props.w * 2) - 36,
+							pointerEvents: 'auto',
+							transform: 'scale(var(--tl-scale))',
+							transformOrigin: '0 4px',
+						}}
+						onPointerDown={(e) => {
+							e.stopPropagation()
+						}}
+						onClick={(e) => {
+							const link = document.createElement('a')
+							link.href = asset.props.src!
+							const name = shape.props.name.trim()
+								? shape.props.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()
+								: 'generated'
+							link.download = `${name}.png`
+							document.body.appendChild(link)
+							link.click()
+							document.body.removeChild(link)
+						}}
+						title="Export Generated Image"
+					/>
+				)}
 			</>
 		)
 	}
